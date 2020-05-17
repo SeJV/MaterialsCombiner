@@ -23,6 +23,7 @@ pyfiglet==0.8.post1
 pymatgen==2020.4.29
 pyparsing==2.4.7
 python-dateutil==2.8.1
+python-dotenv==0.13.0
 pytz==2020.1
 qmpy-rester==0.2.0
 requests==2.23.0
