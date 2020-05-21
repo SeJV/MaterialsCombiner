@@ -2,42 +2,51 @@ from flask import Flask
 from flask_restful import Resource, Api
 from pymatgen import MPRester
 import qmpy_rester as qr
-from dotenv import load_dotenv
-import os
-import json
-load_dotenv()
-MP_KEY = os.getenv("MP_KEY")
+import simplejson as json
+from parser import parse_formula
+from mendeleev import get_table
+from cache import Cache
 
 app = Flask(__name__)
 api = Api(app)
+table = get_table("elements")
 
-
-def add_source(obj, source):
-    obj["source"] = source
-    return obj
-
-
-class EntriesRequest(Resource):
+class EntiriesRequest(Resource):
+    def __init__(self):
+        """cache for 1 day"""
+        self._cache = Cache("requests.db", 86400)
 
     def get(self, inp):
-        with MPRester(MP_KEY) as m:
-            compositions_mp = m.get_data(inp)
-            compositions_mp = list(map(lambda comp: add_source(comp, "materials_project"), compositions_mp))
+        cached_response = self._cache.getResponse("/formula/" + inp)
+
+        if cached_response is not None:
+            return cached_response
+
+        with MPRester("uJkhmuvzyyMdO5qHZX") as m:
+            mp_data = m.get_data(inp)
 
         with qr.QMPYRester() as q:
-            compositions_oqmd = q.get_oqmd_phases(verbose=False, composition=inp)["data"]
-            compositions_oqmd = list(map(lambda comp: add_source(comp, "oqmd"), compositions_oqmd))
+            qr_data = q.get_oqmd_phases(verbose=False, composition=inp)
 
-        result = compositions_mp + compositions_oqmd
+
+        elements = [*parse_formula(inp)]
+        elements_data = [(table[table['symbol'] == e]).to_dict() for e in elements]
+
+        data_in_json = json.dumps({
+                'mp': [data for data in mp_data if data.get('pretty_formula') == inp],
+                'qr': qr_data,
+                'elements': elements_data
+        }, ignore_nan=True)
+
+        self._cache.saveResponse("/formula/" + inp, data_in_json)
 
         response = app.response_class(
-            response=json.dumps(result),
+            response=data_in_json,
             status=200,
             mimetype='application/json'
         )
         return response
 
+api.add_resource(EntiriesRequest, '/formula/<string:inp>')
 
-api.add_resource(EntriesRequest, '/composition/<string:inp>')
 app.run(debug=True)
-
