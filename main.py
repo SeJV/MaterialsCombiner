@@ -20,23 +20,23 @@ class EntiriesRequest(Resource):
         cached_response = self._cache.getResponse("/formula/" + inp)
 
         if cached_response is not None:
-            return cached_response
+            data_in_json = cached_response
+        else:
+            with MPRester("uJkhmuvzyyMdO5qHZX") as m:
+                mp_data = m.get_data(inp)
 
-        with MPRester("uJkhmuvzyyMdO5qHZX") as m:
-            mp_data = m.get_data(inp)
-
-        with qr.QMPYRester() as q:
-            qr_data = q.get_oqmd_phases(verbose=False, composition=inp)
+            with qr.QMPYRester() as q:
+                qr_data = q.get_oqmd_phases(verbose=False, composition=inp)
 
 
-        elements = [*parse_formula(inp)]
-        elements_data = [(table[table['symbol'] == e]).to_dict() for e in elements]
+            elements = [*parse_formula(inp)]
+            elements_data = [(table[table['symbol'] == e]).to_dict() for e in elements]
 
-        data_in_json = json.dumps({
-                'mp': [data for data in mp_data if data.get('pretty_formula') == inp],
-                'qr': qr_data,
-                'elements': elements_data
-        }, ignore_nan=True)
+            data_in_json = json.dumps({
+                    'mp': [data for data in mp_data if data.get('pretty_formula') == inp],
+                    'qr': qr_data,
+                    'elements': elements_data
+            }, ignore_nan=True)
 
         self._cache.saveResponse("/formula/" + inp, data_in_json)
 
