@@ -33,7 +33,7 @@ class EntiriesRequest(Resource):
             elements_data = [(table[table['symbol'] == e]).to_dict() for e in elements]
 
             data_in_json = json.dumps({
-                    'mp': [data for data in mp_data if data.get('pretty_formula') == inp],
+                    'mp': mp_data,
                     'qr': qr_data,
                     'elements': elements_data
             }, ignore_nan=True)
