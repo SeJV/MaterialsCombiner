@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_restful import Resource, Api
 from pymatgen import MPRester
@@ -6,6 +7,8 @@ import simplejson as json
 from parser import parse_formula
 from mendeleev import get_table
 from cache import Cache
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 api = Api(app)
@@ -22,7 +25,8 @@ class EntiriesRequest(Resource):
         if cached_response is not None:
             data_in_json = cached_response
         else:
-            with MPRester("uJkhmuvzyyMdO5qHZX") as m:
+            MP_KEY = os.getenv("MP_KEY")
+            with MPRester(MP_KEY) as m:
                 mp_data = m.get_data(inp)
 
             with qr.QMPYRester() as q:
