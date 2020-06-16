@@ -14,6 +14,7 @@ app = Flask(__name__)
 api = Api(app)
 table = get_table("elements")
 
+
 class EntiriesRequest(Resource):
     def __init__(self):
         """cache for 1 day"""
@@ -30,8 +31,7 @@ class EntiriesRequest(Resource):
                 mp_data = m.get_data(inp)
 
             with qr.QMPYRester() as q:
-                qr_data = q.get_oqmd_phases(verbose=False, composition=inp)
-
+                qr_data = q.get_oqmd_phases(verbose=False, element_set=inp)
 
             elements = [*parse_formula(inp)]
             elements_data = [(table[table['symbol'] == e]).to_dict() for e in elements]
