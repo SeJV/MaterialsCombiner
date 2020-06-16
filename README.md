@@ -15,9 +15,8 @@ Currently included DataBases:
 - on `port:5000` ist the service now available
 - get information with a `GET request` on path `/formula/<your_input>`
   - Information gets cached locally, so the next time you reqest the same data, it will be much faster
-  - Additionally you can use: '-' for OR, ',' for AND, e.g. (Fe-Mn),O for all the currently implemented databases 
-  - It will get you all the formulas containing your requested elements
-    - 
+  - Additionally you can use: '-' for OR, ',' for AND, e.g. (Fe-Mn),O for the OQMD database
+  
   
 ## Further possible improvements
 - Additional databases with API
