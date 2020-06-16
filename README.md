@@ -15,6 +15,7 @@ Currently included DataBases:
 - on `port:5000` ist the service now available
 - get information with a `GET request` on path `/formula/<your_input>`
   - Information gets cached locally, so the next time you reqest the same data, it will be much faster
+  - Additionally you can use: '-' for OR, ',' for AND, e.g. (Fe-Mn),O for all the currently implemented databases 
   
 ## Further possible improvements
 - Additional databases with API
@@ -28,3 +29,5 @@ Currently included DataBases:
     - COD: https://pypi.org/project/crystals/
     - ICSD: https://github.com/hegdevinayi/icsd-queryer
   - Those are easier to implement, because you don't need an additional Flask app, but can use the already implemented functions
+  - If the response format from the api is not available in json, you need to transform it to json
+  - Concatenate the results into the `data_in_json` object in the `main.py` file inside the get function, with the key as the identifier for the database
