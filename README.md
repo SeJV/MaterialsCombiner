@@ -18,7 +18,7 @@ Currently included DataBases:
   - Additionally you can use: '-' for OR, ',' for AND, e.g. (Fe-Mn),O for the OQMD database
   
   
-## Further possible improvements
+## Adding databases
 - Additional databases with API
   - With Flask requests, any available API that has a formula as Input and returns an json object is addable
   - In the `main.py` inside the `get` function, there is an `inp` parameter, that represents the formula as string
