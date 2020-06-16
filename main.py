@@ -28,7 +28,7 @@ class EntiriesRequest(Resource):
         else:
             MP_KEY = os.getenv("MP_KEY")
             with MPRester(MP_KEY) as m:
-                mp_data = m.query(criteria={"elements": {"$all": [*parse_formula(inp)]}}, properties=[])
+                mp_data = m.get_data(inp)
 
             with qr.QMPYRester() as q:
                 qr_data = q.get_oqmd_phases(verbose=False, element_set=inp)
