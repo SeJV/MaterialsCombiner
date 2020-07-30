@@ -15,7 +15,7 @@ api = Api(app)
 table = get_table("elements")
 
 
-class EntiriesRequest(Resource):
+class EntriesRequest(Resource):
     def __init__(self):
         """cache for 1 day"""
         self._cache = Cache("requests.db", 86400)
@@ -51,6 +51,6 @@ class EntiriesRequest(Resource):
         )
         return response
 
-api.add_resource(EntiriesRequest, '/formula/<string:inp>')
+api.add_resource(EntriesRequest, '/formula/<string:inp>')
 
 app.run(debug=True)
