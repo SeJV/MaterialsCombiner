@@ -12,7 +12,7 @@ Currently included DataBases:
 - Run with `python3 main.py`
 
 ## Use the service
-- on `port:5000` ist the service now available
+- on `port:5000` the service is now available
 - get information with a `GET request` on path `/formula/<your_input>`
   - Information gets cached locally, so the next time you reqest the same data, it will be much faster
   - Additionally you can use: '-' for OR, ',' for AND, e.g. (Fe-Mn),O for the OQMD database
